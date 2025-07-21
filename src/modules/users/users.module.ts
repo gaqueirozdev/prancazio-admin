@@ -8,19 +8,31 @@ import { RegisterUseCase } from './use-cases/register-use-case'
 import { CreateUserController } from './controllers/create-user'
 import { GetUsersController } from './controllers/get-users'
 import { GetUsersUseCase } from './use-cases/get-users-use-case'
+import { UpdateUserController } from './controllers/update-user'
+import { UpdateUserUseCase } from './use-cases/update-user-use-case'
+import { DeleteUserController } from './controllers/delete-user'
+import { DeleteUserUseCase } from './use-cases/delete-user-use-case'
+import { GetUserByIdUseCase } from './use-cases/get-user-by-id-use-case'
+import { GetUserByIdController } from './controllers/get-user-by-id'
 
 @Module({
 	imports: [TypeOrmModule.forFeature([User])], // “Este módulo precisa ter acesso ao repositório da entidade User, gerenciado pelo TypeORM.”
 	controllers: [
 		SeedUsersController,
 		CreateUserController,
-		GetUsersController
+		GetUsersController,
+		UpdateUserController,
+		DeleteUserController,
+		GetUserByIdController
 	],
 	providers: [
 		UsersRepository,
 		FindUserByEmailUseCase,
 		RegisterUseCase,
-		GetUsersUseCase
+		GetUsersUseCase,
+		UpdateUserUseCase,
+		DeleteUserUseCase,
+		GetUserByIdUseCase
 	],
 	exports: [UsersRepository], // “Eu quero que esse UsersRepository fique disponível para outros módulos que importarem o UsersModule.”
 })

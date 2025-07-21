@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import { UserRoles } from '../enums/role.enum'
 
 @Entity('users')
@@ -12,7 +12,7 @@ export class User {
 	@Column({ unique: true })
 		email: string
 
-	@Column()
+	@Column({ select: false })
 		password: string
 
 	//Alterar para SELLER em algum momento futuro
@@ -21,4 +21,10 @@ export class User {
 
 	@Column({ default: true })
 		isActive: boolean
+
+	@DeleteDateColumn({ nullable: true })
+		deletedAt?: Date
+
+	@Column({ type: 'uuid', nullable: true })
+		deletedBy?: string
 }
