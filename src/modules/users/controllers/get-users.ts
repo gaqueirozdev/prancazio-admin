@@ -8,10 +8,10 @@ export class GetUsersController {
 	constructor(private readonly getUsersUseCase: GetUsersUseCase) {}
 
 	@Get()
-	getUsers(@Query() query: PaginationQueryDto) {
+	async getUsers(@Query() query: PaginationQueryDto) {
 		const page = query.page || '1'
 		const limit = query.limit || '10'
 
-		return this.getUsersUseCase.execute({ page, limit })
+		return await this.getUsersUseCase.execute({ page, limit })
 	}
 }
