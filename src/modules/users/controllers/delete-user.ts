@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Controller, Delete, Param, Req } from '@nestjs/common'
+import { Controller, Delete, Param, Req, UseGuards } from '@nestjs/common'
 import { DeleteUserUseCase } from '../use-cases/delete-user-use-case'
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard'
+import { RolesGuard } from '../guards/roles.guard'
+import { Roles } from '../decorators/roles.decorator'
+import { UserRoles } from '../enums/role.enum'
 
+@Controller('users')
 @ApiTags('Users')
 @ApiBearerAuth()
-@Controller('users')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(UserRoles.ADMIN)
 export class DeleteUserController {
 	constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}
 

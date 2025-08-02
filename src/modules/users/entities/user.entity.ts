@@ -12,7 +12,7 @@ export class User {
 	@Column({ unique: true })
 		email: string
 
-	@Column({ select: false })
+	@Column()
 		password: string
 
 	//Alterar para SELLER em algum momento futuro
