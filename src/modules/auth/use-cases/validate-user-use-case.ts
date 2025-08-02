@@ -2,12 +2,15 @@ import { FindUserByEmailUseCase } from 'src/modules/users/use-cases/find-user-by
 import { IValidateUserUseCase } from './validate-user-use-case.interface'
 import * as bcrypt from 'bcrypt'
 import { ResourceNotFoundError } from 'src/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class ValidateUserUseCase {
 	constructor(private findUserByEmailUseCase: FindUserByEmailUseCase) {}
 
 	async execute ({ email, password }: IValidateUserUseCase) {
 		const user = await this.findUserByEmailUseCase.execute(email)
+
 		const isMatch = await bcrypt.compare(password, user?.password ?? '')
 
 		if (!user || !isMatch) throw new ResourceNotFoundError()

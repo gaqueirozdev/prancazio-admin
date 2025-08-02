@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
+import { AuthModule } from './modules/auth/auth.module'
 
 @Module({
 	imports: [
 		UsersModule,
+		AuthModule,
 		// Carrega variáveis de ambiente de .env
 		ConfigModule.forRoot({
 			isGlobal: true, // Torna acessível em toda a aplicação
