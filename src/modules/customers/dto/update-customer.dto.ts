@@ -3,14 +3,16 @@ import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator'
 import { Gender } from '../enums/gender.enum'
 import { CivilState } from '../enums/civil-state.enum'
 
-export class CreateCustomerDto {
+export class UpdateCustomerDto {
 	@ApiProperty()
 	@IsString()
-		name: string
+	@IsOptional()
+		name?: string
 
 	@ApiProperty()
 	@IsString()
-		phone: string
+	@IsOptional()
+		phone?: string
 
 	@ApiProperty()
 	@IsEmail()
@@ -54,7 +56,8 @@ export class CreateCustomerDto {
 
 	@ApiProperty({ enum: Gender })
 	@IsEnum(Gender)
-		gender: Gender
+	@IsOptional()
+		gender?: Gender
 
 	@ApiProperty({ enum: CivilState })
 	@IsEnum(CivilState)
