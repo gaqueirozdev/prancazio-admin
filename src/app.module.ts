@@ -4,12 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CustomersModule } from './modules/customers/customers.module'
+import { ProductTypesModule } from './modules/productType/product-types.module'
 
 @Module({
 	imports: [
 		UsersModule,
 		AuthModule,
 		CustomersModule,
+		ProductTypesModule,
 		// Carrega variáveis de ambiente de .env
 		ConfigModule.forRoot({
 			isGlobal: true, // Torna acessível em toda a aplicação
