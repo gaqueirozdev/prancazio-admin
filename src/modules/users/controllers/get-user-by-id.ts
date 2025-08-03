@@ -6,6 +6,9 @@ import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard'
 import { RolesGuard } from '../guards/roles.guard'
 import { Roles } from '../decorators/roles.decorator'
 import { UserRoles } from '../enums/role.enum'
+import { IGenericSingleResponse } from 'src/common/interfaces/generic-single-response.interface'
+import { ICustomErrorMessage } from 'src/common/interfaces/custom-error-message.interface'
+import { User } from '../entities/user.entity'
 
 @Controller('users')
 @ApiTags('Users')
@@ -17,9 +20,11 @@ export class GetUserByIdController {
 
 	@Get(':id')
 	@ApiParam({ name: 'id', description: 'User ID to be searched' })
-	async getUserById(@Param('id') id: string) {
+	async getUserById(@Param('id') id: string): Promise<IGenericSingleResponse<User | null> | ICustomErrorMessage> {
 		try {
-			return await this.getUserByIdUseCase.execute(id)
+			const user = await this.getUserByIdUseCase.execute(id)
+
+			return { data: user }
 		} catch (err) {
 			if (err instanceof ResourceNotFoundError) {
 				return {
@@ -27,6 +32,12 @@ export class GetUserByIdController {
 					message: 'Usuário não encontrado',
 					code: 'NOT_FOUND'
 				}
+			}
+
+			return {
+				status: 500,
+				message: 'Houve um erro ao buscar o usuário',
+				code: 'SERVER_ERROR'
 			}
 		}
 	}

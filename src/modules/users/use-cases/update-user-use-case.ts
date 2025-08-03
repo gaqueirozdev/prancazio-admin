@@ -3,6 +3,7 @@ import { ConflictException, Injectable } from '@nestjs/common'
 import { FindUserByEmailUseCase } from './find-user-by-email-use-case'
 import { UpdateUserDto } from '../dto/update-user.dto'
 import { ResourceNotFoundError } from 'src/errors/resource-not-found-error'
+import { GenericUpdateResponse } from 'src/common/interfaces/generic-update-response.interface'
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -11,7 +12,7 @@ export class UpdateUserUseCase {
 		private readonly findUserByEmailUseCase: FindUserByEmailUseCase
 	) {}
 
-	async execute ({ id, dto }: { id: string, dto: UpdateUserDto }) {
+	async execute ({ id, dto }: { id: string, dto: UpdateUserDto }): Promise<GenericUpdateResponse> {
 		if (dto.email) {
 			const user = await this.findUserByEmailUseCase.execute(dto.email)
 
@@ -24,6 +25,6 @@ export class UpdateUserUseCase {
 
 		if (!user) throw new ResourceNotFoundError()
 
-		return { ...user, password: undefined }
+		return { message: 'Usuário atualizado com sucesso', id: user.id }
 	}
 }

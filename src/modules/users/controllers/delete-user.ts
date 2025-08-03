@@ -23,11 +23,7 @@ export class DeleteUserController {
 			
 			await this.deleteUserUseCase.execute({ id, deletedBy })
 			
-			return {
-				message: 'Usuário deletado com sucesso',
-				userId: id,
-				deletedBy,
-			}
+			return { message: 'Usuário deletado com sucesso' }
 		} catch (err) {
 			console.log(err)
 			return { status: 500, message: 'Houve um erro ao deletar o usuário' }

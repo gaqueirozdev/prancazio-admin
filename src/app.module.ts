@@ -3,11 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { CustomersModule } from './modules/customers/customers.module'
 
 @Module({
 	imports: [
 		UsersModule,
 		AuthModule,
+		CustomersModule,
 		// Carrega variáveis de ambiente de .env
 		ConfigModule.forRoot({
 			isGlobal: true, // Torna acessível em toda a aplicação
@@ -24,6 +26,7 @@ import { AuthModule } from './modules/auth/auth.module'
 				database: config.get('DB_DATABASE'),
 				entities: [__dirname + '/**/*.entity.{ts,js}'],
 				synchronize: true,
+				// logging: true
 			})
 		}),
 	]

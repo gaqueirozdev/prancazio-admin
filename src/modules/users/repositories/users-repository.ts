@@ -4,6 +4,8 @@ import { CreateUserDto } from '../dto/create-user.dto'
 import { Injectable } from '@nestjs/common'
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto'
 import { UpdateUserDto } from '../dto/update-user.dto'
+import { IGetPaginatedResponse } from 'src/common/interfaces/generic-paginated-response.interface'
+import { IUsersResponse } from '../interfaces/get-users-use-case.interface'
 
 @Injectable()
 export class UsersRepository {
@@ -23,7 +25,7 @@ export class UsersRepository {
 		return await this.repository.findOne({ where: { email } })
 	}
 
-	async getUsers ({ page, limit }: PaginationQueryDto) {
+	async getUsers ({ page, limit }: PaginationQueryDto): Promise<IGetPaginatedResponse<IUsersResponse>> {
 		const [users, total] = await this.repository.findAndCount({
 			take: Number(limit),
 			skip: (Number(page) - 1) * Number(limit)
@@ -40,7 +42,6 @@ export class UsersRepository {
 	}
 
 	async getUserById (id: string): Promise<User | null> {
-		console.log(id)
 		return await this.repository.findOne({ where: { id } })
 	}
 
@@ -55,8 +56,7 @@ export class UsersRepository {
 	}
 
 	async deleteUser ({ id, deletedBy }: { id: string, deletedBy: string }): Promise<UpdateResult> {
-		// await this.repository.update(id, { deletedBy })
-		console.log(deletedBy) //Não tem JWT ainda
+		await this.repository.update(id, { deletedBy })
 		
 		return await this.repository.softDelete(id)
 	}
