@@ -1,10 +1,10 @@
-import { User } from '../entities/user.entity'
 import { CreateUserDto } from '../dto/create-user.dto'
-import { encryptPassword } from 'src/common/helpers/password'
+import { password_encryptPassword } from 'src/common/helpers/password'
 import { UsersRepository } from '../repositories/users-repository'
 import { Injectable } from '@nestjs/common'
 import { FindUserByEmailUseCase } from './find-user-by-email-use-case'
 import { UserAlreadyExistsError } from 'src/errors/user-already-exists-error'
+import { GenericCreateResponse } from 'src/common/interfaces/generic-create-response.interface'
 
 @Injectable()
 export class RegisterUseCase {
@@ -13,14 +13,16 @@ export class RegisterUseCase {
 		private readonly findUserByEmailUseCase: FindUserByEmailUseCase
 	) {}
 
-	async execute (dto: CreateUserDto): Promise<User> {
+	async execute (dto: CreateUserDto): Promise<GenericCreateResponse> {
 		const user = await this.findUserByEmailUseCase.execute(dto.email)
 
 		if (user) throw new UserAlreadyExistsError()
 
-		return await this.usersRepository.register({
+		const createdUser = await this.usersRepository.register({
 			...dto,
-			password: await encryptPassword(dto.password)
+			password: await password_encryptPassword(dto.password)
 		})
+
+		return { id: createdUser.id, message: 'Usuário criado com sucesso' }
 	}
 }

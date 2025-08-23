@@ -1,4 +1,4 @@
-import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { UserRoles } from '../enums/role.enum'
 
 @Entity('users')
@@ -27,4 +27,10 @@ export class User {
 
 	@Column({ type: 'uuid', nullable: true })
 		deletedBy?: string
+
+	@CreateDateColumn()
+		createdAt: Date
+
+	@UpdateDateColumn()
+		updatedAt: Date
 }

@@ -1,6 +1,7 @@
-import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Gender } from '../enums/gender.enum'
 import { CivilState } from '../enums/civil-state.enum'
+import { Order } from 'src/modules/orders/entities/order.entity'
 
 @Entity('customers')
 export class Customer {
@@ -48,4 +49,15 @@ export class Customer {
 	
 	@Column({ type: 'uuid', nullable: true })
 		deletedBy?: string
+
+	// Um cliente pode ter várias vendas -> OneToMany
+	// Várias vendas podem ter o mesmo cliente -> ManyToOne	
+	@OneToMany(() => Order, order => order.customer)
+		orders: Order[]
+
+	@CreateDateColumn()
+		createdAt: Date
+
+	@UpdateDateColumn()
+		updatedAt: Date
 }
