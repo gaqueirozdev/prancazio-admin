@@ -1,9 +1,10 @@
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, Repository, UpdateResult } from 'typeorm'
 import { ProductType } from '../entities/product-type.entity'
 import { CreateProductTypeDto } from '../dto/create-product-type.dto'
 import { Injectable } from '@nestjs/common'
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto'
 import { IGetPaginatedResponse } from 'src/common/interfaces/generic-paginated-response.interface'
+import { UpdateProductTypeDto } from '../dto/update-product-type.dto'
 
 @Injectable()
 export class ProductTypesRepository {
@@ -19,7 +20,7 @@ export class ProductTypesRepository {
 		return await this.repository.save(productType)
 	}
 
-	async getProductByName (name: string): Promise<ProductType | null> {
+	async getProductTypeByName (name: string): Promise<ProductType | null> {
 		return await this.repository.findOne({ where: { name }})
 	}
 
@@ -35,5 +36,15 @@ export class ProductTypesRepository {
 			page,
 			total
 		}
+	}
+
+	async update ({ id, dto }: { id: string, dto: UpdateProductTypeDto }): Promise<UpdateResult> {
+		return await this.repository.update({ id }, dto)
+	}
+
+	async delete ({id, deletedBy }: { id: string, deletedBy: string }): Promise<UpdateResult> {
+		await this.repository.update(id, { deletedBy })
+
+		return await this.repository.softDelete(id)
 	}
 }

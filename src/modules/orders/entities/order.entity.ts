@@ -1,12 +1,14 @@
+import { IsOptional } from 'class-validator'
 import { Customer } from 'src/modules/customers/entities/customer.entity'
-import { ProductType } from 'src/modules/productType/entities/product-type.entity'
+import { Product } from 'src/modules/products/entities/product.entity'
 import { 
 	Column, 
 	CreateDateColumn, 
+	DeleteDateColumn, 
 	Entity, 
 	JoinColumn, 
 	ManyToOne, 
-	OneToOne, 
+	OneToMany, 
 	PrimaryGeneratedColumn, 
 	RelationId, 
 	UpdateDateColumn 
@@ -17,43 +19,69 @@ export class Order {
 	@PrimaryGeneratedColumn('uuid')
 		id: string	
 
-	@Column({ unique: true })
-		saleIdentifier: string
-	
-	@OneToOne(() => ProductType, { eager: true, onDelete: 'SET NULL' })
-	@JoinColumn({ name: 'productTypeId' })
-		productType: ProductType
+	@Column({ unique: true, comment: 'Only set after payment, so the order turns into a sale', nullable: true })
+	@IsOptional()	
+		saleIdentifier?: string
 
-	@RelationId((order: Order) => order.productType)
-		productTypeId: string
+	@Column({ type: 'float' })
+		value: number
 
 	@Column({ type: 'date' })
 		dueDate: Date
 
-	@Column({ type: 'decimal', precision: 10, scale: 2 })
-		weight: number
-
-	@Column({ type: 'text' })
-		description: string
+	@Column({ nullable: true })
+		observation?: string
 
 	// Várias vendas podem ter o mesmo cliente -> ManyToOne
 	// Um cliente pode ter várias vendas -> OneToMany	
 	@ManyToOne(() => Customer, customer => customer.orders, { onDelete: 'SET NULL' })
 	@JoinColumn({ name: 'customerId' })
-		customer: Customer
+		customer?: Customer
 
+	@Column({ type: 'uuid', nullable: true })
 	@RelationId((order: Order) => order.customer)
-		customerId: string
-	
-	@Column({ type: 'decimal', precision: 10, scale: 2 })	
-		value: number
+		customerId?: string
 
+	// Uma venda pode ter o vários produtos -> OneToMany
+	// Vários produtos podem ter a mesma venda -> ManyToOne	
+	// O lado OneToMany apenas aponta para a propriedade que referencia a venda no Product
+	// eager: true / lazy: true traz o relacionamento direto no find da entidade ou não.
+	// sem eager, para buscar o relacionamento será necessário fazer um queryBuilder ou um find a mais. 
+	/**
+	 * Find manual com QueryBuilder
+	 		const order = await orderRepository.findOne({
+				where: { id: orderId },
+				relations: ['products', 'customer'], // inclua os relacionamentos que quiser
+			});
+	 */
+	@OneToMany(() => Product, product => product.order, { cascade: true })
+		products: Product[]	
+	
 	@Column()
 		paymentMethod: string
 
+	@Column({ type: 'timestamp', nullable: true })
+		cancelingDate?: Date
+
+	@Column({ type: 'uuid', nullable: true })
+		markedCanceledBy?: string
+
+	@Column({ nullable: true })
+		cancelingReason?: string
+
 	@CreateDateColumn()
-		createdAt: Date
+	@IsOptional()
+		createdAt?: Date
 
 	@UpdateDateColumn()
-		updatedAt: Date
+	@IsOptional()
+		updatedAt?: Date
+
+	@DeleteDateColumn({ nullable: true })
+	@IsOptional()
+		deletedAt?: Date
+
+	@Column({ nullable: true })
+	@IsOptional()
+		deletedBy?: string
 }

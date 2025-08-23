@@ -9,7 +9,7 @@ export class CreateProductTypeUseCase {
 	constructor(private readonly productTypesRepository: ProductTypesRepository) {}
 
 	async execute (dto: CreateProductTypeDto): Promise<GenericCreateResponse> {
-		const productType = await this.productTypesRepository.getProductByName(dto.name)
+		const productType = await this.productTypesRepository.getProductTypeByName(dto.name)
 
 		if (productType) throw new ProductTypeNameAlreadyInUseError
 

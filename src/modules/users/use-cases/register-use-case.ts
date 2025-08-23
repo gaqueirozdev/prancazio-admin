@@ -1,5 +1,5 @@
 import { CreateUserDto } from '../dto/create-user.dto'
-import { encryptPassword } from 'src/common/helpers/password'
+import { password_encryptPassword } from 'src/common/helpers/password'
 import { UsersRepository } from '../repositories/users-repository'
 import { Injectable } from '@nestjs/common'
 import { FindUserByEmailUseCase } from './find-user-by-email-use-case'
@@ -20,7 +20,7 @@ export class RegisterUseCase {
 
 		const createdUser = await this.usersRepository.register({
 			...dto,
-			password: await encryptPassword(dto.password)
+			password: await password_encryptPassword(dto.password)
 		})
 
 		return { id: createdUser.id, message: 'Usuário criado com sucesso' }

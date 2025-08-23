@@ -5,6 +5,8 @@ import { UsersModule } from './modules/users/users.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CustomersModule } from './modules/customers/customers.module'
 import { ProductTypesModule } from './modules/productType/product-types.module'
+import { OrdersModule } from './modules/orders/orders.module'
+import { ProductsModule } from './modules/products/products.module'
 
 @Module({
 	imports: [
@@ -12,6 +14,8 @@ import { ProductTypesModule } from './modules/productType/product-types.module'
 		AuthModule,
 		CustomersModule,
 		ProductTypesModule,
+		OrdersModule,
+		ProductsModule,
 		// Carrega variáveis de ambiente de .env
 		ConfigModule.forRoot({
 			isGlobal: true, // Torna acessível em toda a aplicação
@@ -28,7 +32,7 @@ import { ProductTypesModule } from './modules/productType/product-types.module'
 				database: config.get('DB_DATABASE'),
 				entities: [__dirname + '/**/*.entity.{ts,js}'],
 				synchronize: true,
-				// logging: true
+				logging: true
 			})
 		}),
 	]
