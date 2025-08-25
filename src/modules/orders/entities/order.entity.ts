@@ -54,7 +54,7 @@ export class Order {
 				relations: ['products', 'customer'], // inclua os relacionamentos que quiser
 			});
 	 */
-	@OneToMany(() => Product, product => product.order, { cascade: true })
+	@OneToMany(() => Product, product => product.order, { cascade: ['insert', 'update'], eager: true })
 		products: Product[]	
 	
 	@Column()
