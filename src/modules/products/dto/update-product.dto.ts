@@ -3,6 +3,10 @@ import { IsDateString, IsNumber, IsOptional, IsString, IsUUID } from 'class-vali
 
 export class UpdateProductDto {
 	@ApiProperty()
+	@IsUUID()
+		id?: string
+
+	@ApiProperty()
 	@IsString()
 	@IsOptional()
 		productTypeId?: string

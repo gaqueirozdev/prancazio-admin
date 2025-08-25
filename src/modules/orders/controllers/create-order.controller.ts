@@ -1,6 +1,6 @@
 import { Body, Controller, Injectable, Post, UseGuards } from '@nestjs/common'
 import { CreateOrderUseCase } from '../use-cases/create-order.use-case'
-import { CreateOrderDto } from '../dto/create-orders.dto'
+import { CreateOrderDto } from '../dto/create-order.dto'
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard'
 import { RolesGuard } from 'src/modules/users/guards/roles.guard'
