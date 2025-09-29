@@ -61,6 +61,9 @@ export class Order {
 		paymentMethod: string
 
 	@Column({ type: 'timestamp', nullable: true })
+		paymentDate?: Date
+
+	@Column({ type: 'timestamp', nullable: true })
 		cancelingDate?: Date
 
 	@Column({ type: 'uuid', nullable: true })
