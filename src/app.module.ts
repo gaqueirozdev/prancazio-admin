@@ -7,6 +7,8 @@ import { CustomersModule } from './modules/customers/customers.module'
 import { ProductTypesModule } from './modules/productType/product-types.module'
 import { OrdersModule } from './modules/orders/orders.module'
 import { ProductsModule } from './modules/products/products.module'
+import { PurchasesModule } from './modules/purchases/purchase.module'
+import { VendorsModule } from './modules/vendor/vendor.module'
 
 @Module({
 	imports: [
@@ -16,8 +18,10 @@ import { ProductsModule } from './modules/products/products.module'
 		ProductTypesModule,
 		OrdersModule,
 		ProductsModule,
-		// Carrega variáveis de ambiente de .env
-		ConfigModule.forRoot({
+		PurchasesModule,
+		VendorsModule,
+
+		ConfigModule.forRoot({// Carrega variáveis de ambiente de .env
 			isGlobal: true, // Torna acessível em toda a aplicação
 		}),
 		TypeOrmModule.forRootAsync({

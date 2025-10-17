@@ -4,17 +4,16 @@ import { Order } from '../entities/order.entity'
 import { CreateOrderDto } from '../dto/create-order.dto'
 import { UpdateOrderDto } from '../dto/update-order.dto'
 import { ResourceNotFoundError } from 'src/errors/resource-not-found-error'
-import { Product } from 'src/modules/products/entities/product.entity'
 import { GenericUpdateResponse } from 'src/common/interfaces/generic-update-response.interface'
 
 @Injectable()
 export class OrdersRepository {
 	private repository: Repository<Order>
-	private productRepository: Repository<Product>
 
-	constructor(private readonly dataSource: DataSource) {
+	constructor(
+		private readonly dataSource: DataSource,
+	) {
 		this.repository = this.dataSource.getRepository(Order)
-		this.productRepository = this.dataSource.getRepository(Product)
 	}
 
 	async create (dto: CreateOrderDto): Promise<Order> {
@@ -33,14 +32,21 @@ export class OrdersRepository {
 
 	async update ({ id, dto }: { id: string, dto: UpdateOrderDto }): Promise<GenericUpdateResponse> {
 		const order = await this.findById(id)
-
 		if (!order) throw new ResourceNotFoundError()
 
-		Object.assign(order, dto)
+		const existingOrderProductsIds = order.products.map(product => product.id) ?? []
+
+		if (dto?.products?.length) {
+			for (const product of dto.products) {
+				if (!product.id) continue
+				
+				if (!existingOrderProductsIds.includes(product.id as string)) {
+					throw new Error(`O produto ${product.id} não pertence à venda ${id}`)
+				}
+			}
+		}
 		
-		order.products = dto.products?.map(productDto => {
-			return this.productRepository.create(productDto)
-		}) ?? []
+		Object.assign(order, dto)
 
 		await this.repository.save(order)
 

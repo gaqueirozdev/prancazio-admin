@@ -4,6 +4,7 @@ import { IsDateString, IsNumber, IsOptional, IsString, IsUUID } from 'class-vali
 export class UpdateProductDto {
 	@ApiProperty()
 	@IsUUID()
+	@IsOptional()
 		id?: string
 
 	@ApiProperty()

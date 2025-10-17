@@ -24,6 +24,14 @@ export class ProductsRepository {
 		return await this.repository.update({ id }, dto)
 	}
 
+	async findById (id: string): Promise<Product | null> {
+		return await this.repository.findOne({ where: { id } })
+	}
+
+	async findByOrderId (orderId: string): Promise<Product[] | null> {
+		return await this.repository.find({ where: { orderId } })
+	}
+
 	async cancel ({ id, dto }: { id: string, dto: CancelProductDto }): Promise<UpdateResult> {
 		return this.repository.update(
 			id, 
